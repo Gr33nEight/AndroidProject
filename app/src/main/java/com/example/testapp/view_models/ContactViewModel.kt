@@ -1,9 +1,10 @@
 package com.example.testapp.view_models
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testapp.models.Contact
-import com.example.testapp.models.ContactRepository
+import com.example.testapp.models.contact.Contact
+import com.example.testapp.models.contact.ContactRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -20,6 +21,12 @@ class ContactViewModel(private val contactRepository: ContactRepository): ViewMo
     fun deleteContact(contact: Contact) {
         viewModelScope.launch {
             contactRepository.deleteContact(contact)
+        }
+    }
+
+    fun updateContact(contact: Contact) {
+        viewModelScope.launch {
+            contactRepository.updateContact(contact)
         }
     }
 }

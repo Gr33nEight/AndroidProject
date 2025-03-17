@@ -45,9 +45,11 @@ import com.example.testapp.ui.theme.TestAppTheme
 import com.example.testapp.utils.CustomPasswordField
 import com.example.testapp.utils.CustomTextField
 import com.example.testapp.utils.Screen
+import kotlin.math.sign
+import kotlin.math.sin
 
 @Composable
-fun SignInView(navController: NavController) {
+fun SignInView(navController: NavController, signIn: (String, String) -> Unit) {
     val textStyle = TextStyle(
         color = DarkPurple
     )
@@ -84,7 +86,7 @@ fun SignInView(navController: NavController) {
                 value = email,
                 onValueChange = { email = it },
                 modifier = Modifier,
-                label = "Email or User Name",
+                label = "Email",
                 leadingIcon = painterResource(R.drawable.ic_person)
             )
             CustomPasswordField(
@@ -104,7 +106,7 @@ fun SignInView(navController: NavController) {
         }
         Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Button( {
-                navController.navigate(Screen.Home.route)
+                signIn(email, password)
             },
                 colors = ButtonColors(
                     contentColor = Color.White,

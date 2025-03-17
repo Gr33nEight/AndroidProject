@@ -1,6 +1,7 @@
 package com.example.testapp.views.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +12,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,14 +30,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testapp.R
+import com.example.testapp.models.contact.Contact
 import com.example.testapp.ui.theme.Pink
 import com.example.testapp.utils.CustomTextField
 import com.example.testapp.utils.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddContactView(onDismiss: (String?, String?) -> Unit) {
-    val modalSheetState = rememberModalBottomSheetState()
+fun AddOrUpdateContactView(contact: Contact?, onDismiss: (String?, String?) -> Unit) {
+    val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var name by remember { mutableStateOf<String?>(null) }
     var phoneNumber by remember { mutableStateOf<String?>(null) }
@@ -86,13 +90,21 @@ fun AddContactView(onDismiss: (String?, String?) -> Unit) {
                             disabledContainerColor = Color.Gray
                         ),
                         shape = RoundedCornerShape(18.dp),
-                        modifier = Modifier.fillMaxWidth().height(50.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
                     ) {
                         Text("Add")
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    contact?.let {
+        LaunchedEffect(it) {
+            name = it.name
+            phoneNumber = it.phoneNumber
         }
     }
 }

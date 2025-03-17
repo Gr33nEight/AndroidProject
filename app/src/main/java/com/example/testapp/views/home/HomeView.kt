@@ -1,5 +1,10 @@
 package com.example.testapp.views.home
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.Icon
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,23 +30,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.testapp.R
-import com.example.testapp.ui.theme.Pink
-import com.example.testapp.models.Contact
+import com.example.testapp.models.contact.Contact
 import com.example.testapp.ui.theme.LightPurple
+import com.example.testapp.ui.theme.Pink
+import com.example.testapp.utils.Mode
 import com.example.testapp.view_models.ContactViewModel
+import com.example.testapp.view_models.UserViewModel
 
 @Composable
-fun HomeView(contactViewModel: ContactViewModel = viewModel(), navController: NavController) {
+fun HomeView(contactViewModel: ContactViewModel = viewModel(),context: Context, logout: () -> Unit) {
+
+    var pickedContact by remember { mutableStateOf<Contact?>(null) }
 
     val contacts by contactViewModel.contacts.collectAsState()
-    var startDeleteMode by remember { mutableStateOf(false) }
+    var mode by remember { mutableStateOf(Mode.NONE) }
     var isSheetOpen by remember { mutableStateOf(false) }
 
     Box {
@@ -63,34 +71,54 @@ fun HomeView(contactViewModel: ContactViewModel = viewModel(), navController: Na
                     painterResource(R.drawable.ic_logout),
                     contentDescription = "",
                     modifier = Modifier.clickable {
-                        navController.popBackStack()
+                        logout()
                     }
                 )
                 Text("Contact List", fontWeight = FontWeight.Bold)
-                Icon(
-                    painterResource(R.drawable.ic_delete),
-                    contentDescription = "",
-                    modifier = Modifier.clickable {
-                        startDeleteMode = !startDeleteMode
-                    }
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                    Icon(
+                        painterResource(R.drawable.ic_edit),
+                        contentDescription = "",
+                        modifier = Modifier.clickable {
+                            mode = if (mode == Mode.NONE) Mode.EDIT else Mode.NONE
+                        }
+                    )
+                    Icon(
+                        painterResource(R.drawable.ic_delete),
+                        contentDescription = "",
+                        modifier = Modifier.clickable {
+                            mode = if (mode == Mode.NONE) Mode.DELETE else Mode.NONE
+                        }
+                    )
+                }
             }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(contacts) { contact ->
-                    ContactCardView(contact, startDeleteMode) {
-                        if (startDeleteMode) {
-                            contactViewModel.deleteContact(contact)
-                            startDeleteMode = false
-                        }else{
-                            // call number
+                    ContactCardView(contact, mode) {
+                        when (mode) {
+                            Mode.NONE -> {
+                                val intent = Intent(Intent.ACTION_DIAL).apply {
+                                    data = Uri.parse("tel:${contact.phoneNumber}")
+                                }
+                                context.startActivity(intent)
+                            }
+                            Mode.EDIT -> {
+                                isSheetOpen = true
+                                pickedContact = contact
+                            }
+                            Mode.DELETE -> {
+                                contactViewModel.deleteContact(contact)
+                            }
                         }
+                        mode = Mode.NONE
                     }
                 }
             }
         }
         IconButton({
+            pickedContact = null
             isSheetOpen = true
         }, modifier = Modifier
             .align(Alignment.BottomEnd)
@@ -107,11 +135,20 @@ fun HomeView(contactViewModel: ContactViewModel = viewModel(), navController: Na
         }
     }
     if (isSheetOpen) {
-        AddContactView { name, phoneNumber ->
+        AddOrUpdateContactView(pickedContact) { name, phoneNumber ->
             name?.let { unwrappedName ->
                 phoneNumber?.let { unwrappedPhoneNumber ->
                     if (phoneNumber.length == 9 && name.length > 2) {
-                        contactViewModel.addContact(unwrappedName, unwrappedPhoneNumber)
+                        if (pickedContact == null) {
+                            contactViewModel.addContact(unwrappedName, unwrappedPhoneNumber)
+                        }else{
+                            val contact = Contact(
+                                id = pickedContact!!.id,
+                                name = unwrappedName,
+                                phoneNumber = unwrappedPhoneNumber
+                            )
+                            contactViewModel.updateContact(contact)
+                        }
                     }
                 }
             }
@@ -120,13 +157,3 @@ fun HomeView(contactViewModel: ContactViewModel = viewModel(), navController: Na
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun HomePreview() {
-//    TestAppTheme {
-//        val navController = rememberNavController()
-//
-//        HomeView(navController = navController)
-//    }
-//}
-//

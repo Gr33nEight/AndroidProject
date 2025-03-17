@@ -52,7 +52,7 @@ import com.example.testapp.utils.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpView(navController: NavController) {
+fun SignUpView(navController: NavController, signUp: (String, String, String, String) -> Unit) {
     val textStyle = TextStyle(
         color = DarkPurple
     )
@@ -124,7 +124,9 @@ fun SignUpView(navController: NavController) {
             )
         }
         Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Button( {  },
+            Button( {
+                signUp(email, password, rePassword, fullName)
+            },
                 colors = ButtonColors(
                     contentColor = Color.White,
                     containerColor = Pink,
@@ -155,10 +157,10 @@ fun SignUpView(navController: NavController) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun SignInPreview() {
-    TestAppTheme {
-        SignUpView(navController = rememberNavController())
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SignInPreview() {
+//    TestAppTheme {
+//        SignUpView(navController = rememberNavController())
+//    }
+//}
