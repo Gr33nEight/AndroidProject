@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -101,14 +102,15 @@ fun SignUpView(navController: NavController, signUp: (String, String, String, St
                 onValueChange = { fullName = it },
                 modifier = Modifier,
                 label = "Full Name",
-                leadingIcon = painterResource(R.drawable.ic_person)
+                leadingIcon = painterResource(R.drawable.ic_person),
             )
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
                 modifier = Modifier,
                 label = "Email",
-                leadingIcon = painterResource(R.drawable.ic_person)
+                leadingIcon = painterResource(R.drawable.ic_person),
+                keyboardType = KeyboardType.Email
             )
             CustomPasswordField(
                 password = password,

@@ -60,36 +60,39 @@ fun HomeView(contactViewModel: ContactViewModel = viewModel(),context: Context, 
                 .padding(horizontal = 20.dp, vertical = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.Start)
-                    .padding(bottom = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+            Box(
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painterResource(R.drawable.ic_logout),
-                    contentDescription = "",
-                    modifier = Modifier.clickable {
-                        logout()
-                    }
-                )
                 Text("Contact List", fontWeight = FontWeight.Bold)
-                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Icon(
-                        painterResource(R.drawable.ic_edit),
+                        painterResource(R.drawable.ic_logout),
                         contentDescription = "",
                         modifier = Modifier.clickable {
-                            mode = if (mode == Mode.NONE) Mode.EDIT else Mode.NONE
+                            logout()
                         }
                     )
-                    Icon(
-                        painterResource(R.drawable.ic_delete),
-                        contentDescription = "",
-                        modifier = Modifier.clickable {
-                            mode = if (mode == Mode.NONE) Mode.DELETE else Mode.NONE
-                        }
-                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                        Icon(
+                            painterResource(R.drawable.ic_edit),
+                            contentDescription = "",
+                            modifier = Modifier.clickable {
+                                mode = if (mode == Mode.NONE) Mode.EDIT else Mode.NONE
+                            }
+                        )
+                        Icon(
+                            painterResource(R.drawable.ic_delete),
+                            contentDescription = "",
+                            modifier = Modifier.clickable {
+                                mode = if (mode == Mode.NONE) Mode.DELETE else Mode.NONE
+                            }
+                        )
+                    }
                 }
             }
             LazyColumn(

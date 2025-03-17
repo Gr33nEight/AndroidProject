@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -87,13 +88,14 @@ fun SignInView(navController: NavController, signIn: (String, String) -> Unit) {
                 onValueChange = { email = it },
                 modifier = Modifier,
                 label = "Email",
-                leadingIcon = painterResource(R.drawable.ic_person)
+                leadingIcon = painterResource(R.drawable.ic_person),
+                keyboardType = KeyboardType.Email
             )
             CustomPasswordField(
                 password = password,
                 onPasswordChange = { password = it },
                 onTrailingIconClick = { hidePassword = !hidePassword },
-                hidePassword = hidePassword,
+                hidePassword = hidePassword
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),

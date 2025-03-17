@@ -1,9 +1,11 @@
 package com.example.testapp.utils
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.testapp.R
@@ -32,5 +34,6 @@ fun CustomPasswordField(
         onTrailingIconClick = onTrailingIconClick,
         label = "Forget Password?",
         visualTransformation = visualTransformation,
+        keyboardType = KeyboardType.Password
     )
 }

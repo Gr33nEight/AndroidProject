@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,7 +75,8 @@ fun AddOrUpdateContactView(contact: Contact?, onDismiss: (String?, String?) -> U
                     phoneNumber = newValue
                 },
                 label = "Phone number",
-                leadingIcon = painterResource(R.drawable.ic_phone)
+                leadingIcon = painterResource(R.drawable.ic_phone),
+                keyboardType = KeyboardType.Phone
             )
 
             if (name != null && phoneNumber != null) {
